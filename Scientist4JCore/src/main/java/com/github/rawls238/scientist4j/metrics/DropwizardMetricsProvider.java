@@ -1,7 +1,7 @@
 package com.github.rawls238.scientist4j.metrics;
 
-import io.dropwizard.metrics5.MetricRegistry;
-import io.dropwizard.metrics5.Timer.Context;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer.Context;
 
 import java.util.Arrays;
 
@@ -19,7 +19,7 @@ public class DropwizardMetricsProvider implements MetricsProvider<MetricRegistry
 
     @Override
     public Timer timer(String... nameComponents) {
-        final io.dropwizard.metrics5.Timer timer = registry.timer(MetricRegistry.name(nameComponents[0], Arrays.copyOfRange(nameComponents, 1, nameComponents.length)));
+        final com.codahale.metrics.Timer timer = registry.timer(MetricRegistry.name(nameComponents[0], Arrays.copyOfRange(nameComponents, 1, nameComponents.length)));
 
         return new Timer() {
 
@@ -47,7 +47,7 @@ public class DropwizardMetricsProvider implements MetricsProvider<MetricRegistry
     @Override
     public Counter counter(String... nameComponents) {
 
-        final io.dropwizard.metrics5.Counter counter = registry.counter(MetricRegistry.name(nameComponents[0], Arrays.copyOfRange(nameComponents, 1, nameComponents.length)));
+        final com.codahale.metrics.Counter counter = registry.counter(MetricRegistry.name(nameComponents[0], Arrays.copyOfRange(nameComponents, 1, nameComponents.length)));
 
         return new Counter() {
 

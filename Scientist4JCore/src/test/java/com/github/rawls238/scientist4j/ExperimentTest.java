@@ -4,8 +4,7 @@ import com.github.rawls238.scientist4j.exceptions.MismatchException;
 import com.github.rawls238.scientist4j.metrics.DropwizardMetricsProvider;
 import com.github.rawls238.scientist4j.metrics.MicrometerMetricsProvider;
 import com.github.rawls238.scientist4j.metrics.NoopMetricsProvider;
-import io.dropwizard.metrics5.Counter;
-import io.dropwizard.metrics5.MetricName;
+import com.codahale.metrics.Counter;
 import org.junit.Test;
 
 import java.util.Date;
@@ -97,7 +96,7 @@ public class ExperimentTest {
 
         exp.run(() -> 1, this::exceptionThrowingFunction);
 
-        Counter result = provider.getRegistry().getCounters().get(MetricName.build("scientist", "test", "candidate", "exception"));
+        Counter result = provider.getRegistry().getCounters().get("scientist.test.candidate.exception");
         assertThat(result.getCount()).isEqualTo(1);
     }
 
