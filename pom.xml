@@ -3,14 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.rawls238</groupId>
-    <artifactId>Scientist4J</artifactId>
-    <version>1.0</version>
+    <groupId>com.github.mhw</groupId>
+    <artifactId>scientist4j</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Scientist4J</name>
     <description>A Java port of Github's Scientist library for refactoring critical code paths</description>
-    <url>https://www.github.com/rawls238/Scientist4J</url>
+    <url>https://www.github.com/mhw/Scientist4J</url>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -18,13 +18,10 @@
     </properties>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>github</id>
+            <name>GitHub mhw Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/mhw/Scientist4J</url>
         </repository>
     </distributionManagement>
     <build>
@@ -97,9 +94,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:rawls238/Scientist4J.git</connection>
-        <developerConnection>scm:git:git@github.com:rawls238/Scientist4J.git</developerConnection>
-        <url>git@github.com:rawls238/Scientist4J.git</url>
+        <connection>scm:git:git@github.com:mhw/Scientist4J.git</connection>
+        <developerConnection>scm:git:git@github.com:mhw/Scientist4J.git</developerConnection>
+        <url>git@github.com:mhw/Scientist4J.git</url>
     </scm>
 
     <modules>

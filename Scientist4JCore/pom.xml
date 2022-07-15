@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.github.rawls238</groupId>
-        <artifactId>Scientist4J</artifactId>
-        <version>1.0</version>
+        <groupId>com.github.mhw</groupId>
+        <artifactId>scientist4j</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>Scientist4JCore</artifactId>
+    <artifactId>scientist4jcore</artifactId>
 
     <dependencies>
         <dependency>
