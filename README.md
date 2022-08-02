@@ -1,13 +1,17 @@
 # Scientist4J
 
+A port of Github's refactoring tool [Scientist](https://github.com/github/scientist) in Java
+
 This fork backports Scientist4J to use Dropwizard Metrics 4.2.10.
 You might want to use it because Dropwizard Metrics 5.x is described as "on pause".
 
-This fork is not yet published to public repositories.
+This fork is published through JitPack.
+
+[![](https://jitpack.io/v/mhw/Scientist4J.svg)](https://jitpack.io/#mhw/Scientist4J)
+
+The original upstream package is published through Maven Central.
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.rawls238/Scientist4J/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.rawls238/Scientist4J)
-
-A port of Github's refactoring tool [Scientist](https://github.com/github/scientist) in Java
 
 # Installation
 
@@ -18,6 +22,7 @@ A port of Github's refactoring tool [Scientist](https://github.com/github/scient
     <version>1.0</version>
 </dependency>
 ```
+
 # Usage
 
 This Java port supports most of the functionality of the original Scientist library in Ruby, however its interface is a bit different.
