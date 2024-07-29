@@ -3,44 +3,57 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.mhw.scientist4j</groupId>
+    <groupId>io.github.johhud1</groupId>
     <artifactId>scientist4j</artifactId>
-    <version>1.0.1</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Scientist4J</name>
     <description>A Java port of Github's Scientist library for refactoring critical code paths</description>
-    <url>https://www.github.com/mhw/Scientist4J</url>
+    <url>https://www.github.com/johhud1/Scientist4J</url>
+
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
-    <distributionManagement>
+    <!-- <distributionManagement>
         <repository>
             <id>github</id>
             <name>GitHub mhw Apache Maven Packages</name>
             <url>https://maven.pkg.github.com/mhw/Scientist4J</url>
         </repository>
-    </distributionManagement>
+    </distributionManagement> -->
+<distributionManagement>
+  <snapshotRepository>
+    <id>ossrh</id>
+    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+  </snapshotRepository>
+  <repository>
+    <id>ossrh</id>
+    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+  </repository>
+</distributionManagement>
+
     <build>
         <plugins>
-            <!--<plugin>-->
-                <!--<groupId>org.sonatype.plugins</groupId>-->
-                <!--<artifactId>nexus-staging-maven-plugin</artifactId>-->
-                <!--<version>1.6.3</version>-->
-                <!--<extensions>true</extensions>-->
-                <!--<configuration>-->
-                    <!--<serverId>ossrh</serverId>-->
-                    <!--<nexusUrl>https://oss.sonatype.org/</nexusUrl>-->
-                    <!--<autoReleaseAfterClose>true</autoReleaseAfterClose>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
+            <!-- <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin> -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -50,6 +63,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.5.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -77,9 +99,28 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                </configuration>
+                </plugin>
         </plugins>
     </build>
-
+    
+    <developers>
+        <developer>
+        <name>John Hudson</name>
+        <email>i@jhudson.io</email>
+        <organization>jhudson</organization>
+        <organizationUrl>https://github.com/johhud1</organizationUrl>
+        </developer>
+    </developers>
     <licenses>
         <license>
             <name>MIT License</name>
@@ -87,16 +128,10 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <name>Guy Aridor</name>
-        </developer>
-    </developers>
-
     <scm>
-        <connection>scm:git:git@github.com:mhw/Scientist4J.git</connection>
-        <developerConnection>scm:git:git@github.com:mhw/Scientist4J.git</developerConnection>
-        <url>git@github.com:mhw/Scientist4J.git</url>
+        <connection>scm:git:git@github.com:johhud1/Scientist4J.git</connection>
+        <developerConnection>scm:git:git@github.com:johhud1/Scientist4J.git</developerConnection>
+        <url>git@github.com:johhud1/Scientist4J.git</url>
     </scm>
 
     <modules>

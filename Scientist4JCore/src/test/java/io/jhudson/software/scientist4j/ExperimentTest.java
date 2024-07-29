@@ -1,9 +1,10 @@
-package com.github.rawls238.scientist4j;
+package io.jhudson.software.scientist4j;
 
-import com.github.rawls238.scientist4j.exceptions.MismatchException;
-import com.github.rawls238.scientist4j.metrics.DropwizardMetricsProvider;
-import com.github.rawls238.scientist4j.metrics.MicrometerMetricsProvider;
-import com.github.rawls238.scientist4j.metrics.NoopMetricsProvider;
+import io.jhudson.software.scientist4j.exceptions.MismatchException;
+import io.jhudson.software.scientist4j.metrics.DropwizardMetricsProvider;
+import io.jhudson.software.scientist4j.metrics.MicrometerMetricsProvider;
+import io.jhudson.software.scientist4j.metrics.NoopMetricsProvider;
+
 import com.codahale.metrics.Counter;
 import org.junit.Test;
 

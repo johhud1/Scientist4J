@@ -1,8 +1,8 @@
-package com.github.rawls238.scientist4j;
-
-import com.github.rawls238.scientist4j.metrics.MetricsProvider;
+package io.jhudson.software.scientist4j;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import io.jhudson.software.scientist4j.metrics.MetricsProvider;
 
 public class TestPublishExperiment<Integer> extends Experiment<Integer> {
   TestPublishExperiment(String name, MetricsProvider<?> metricsProvider) {

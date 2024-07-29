@@ -1,9 +1,9 @@
-package com.github.rawls238.scientist4j;
-
-import com.github.rawls238.scientist4j.exceptions.MismatchException;
+package io.jhudson.software.scientist4j;
 
 import java.util.Map;
 import java.util.Optional;
+
+import io.jhudson.software.scientist4j.exceptions.MismatchException;
 
 /**
  * @param <T> The return type of the control function

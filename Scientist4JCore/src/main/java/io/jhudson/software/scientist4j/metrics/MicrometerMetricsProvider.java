@@ -1,4 +1,4 @@
-package com.github.rawls238.scientist4j.metrics;
+package io.jhudson.software.scientist4j.metrics;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;

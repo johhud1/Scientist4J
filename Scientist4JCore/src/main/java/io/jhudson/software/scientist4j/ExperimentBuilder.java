@@ -1,11 +1,11 @@
-package com.github.rawls238.scientist4j;
-
-import com.github.rawls238.scientist4j.metrics.MetricsProvider;
+package io.jhudson.software.scientist4j;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.function.BiFunction;
+
+import io.jhudson.software.scientist4j.metrics.MetricsProvider;
 
 public class ExperimentBuilder<T> {
     private String name;

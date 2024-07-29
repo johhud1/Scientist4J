@@ -1,7 +1,4 @@
-package com.github.rawls238.scientist4j;
-
-import com.github.rawls238.scientist4j.exceptions.MismatchException;
-import com.github.rawls238.scientist4j.metrics.MetricsProvider;
+package io.jhudson.software.scientist4j;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.function.BiPredicate;
+
+import io.jhudson.software.scientist4j.exceptions.MismatchException;
+import io.jhudson.software.scientist4j.metrics.MetricsProvider;
 
 /**
  * An Experiment that can handle a control and candidate function that return incompatible types.

@@ -1,4 +1,4 @@
-package com.github.rawls238.scientist4j.exceptions;
+package io.jhudson.software.scientist4j.exceptions;
 
 public class MismatchException extends LaboratoryException {
     public MismatchException(String msg) {

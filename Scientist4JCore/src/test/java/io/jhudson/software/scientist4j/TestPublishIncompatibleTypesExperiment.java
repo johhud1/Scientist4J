@@ -1,8 +1,8 @@
-package com.github.rawls238.scientist4j;
-
-import com.github.rawls238.scientist4j.metrics.MetricsProvider;
+package io.jhudson.software.scientist4j;
 
 import java.util.function.BiPredicate;
+
+import io.jhudson.software.scientist4j.metrics.MetricsProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

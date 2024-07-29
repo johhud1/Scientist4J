@@ -1,7 +1,8 @@
-package com.github.rawls238.scientist4j;
+package io.jhudson.software.scientist4j;
 
-import com.github.rawls238.scientist4j.exceptions.MismatchException;
-import com.github.rawls238.scientist4j.metrics.NoopMetricsProvider;
+import io.jhudson.software.scientist4j.exceptions.MismatchException;
+import io.jhudson.software.scientist4j.metrics.NoopMetricsProvider;
+
 import org.junit.Test;
 
 import java.util.Date;

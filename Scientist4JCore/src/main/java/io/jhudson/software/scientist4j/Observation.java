@@ -1,8 +1,8 @@
-package com.github.rawls238.scientist4j;
-
-import com.github.rawls238.scientist4j.metrics.MetricsProvider.Timer;
+package io.jhudson.software.scientist4j;
 
 import java.util.Optional;
+
+import io.jhudson.software.scientist4j.metrics.MetricsProvider.Timer;
 
 public class Observation<T> {
 
