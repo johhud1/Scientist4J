@@ -11,6 +11,8 @@
     <description>A Java port of Github's Scientist library for refactoring critical code paths</description>
     <url>https://www.github.com/johhud1/Scientist4J</url>
 
+        <!-- TODO: add more maintainer details? -->
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
@@ -21,6 +23,7 @@
         <module>scientist4JCore</module>
     </modules>
 
+<!-- TODO: is this right? revisit this -->
     <!-- <distributionManagement>
         <repository>
             <id>github</id>
@@ -59,10 +62,11 @@
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
-                        <phase>verify</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>sign</goal>
                         </goals>
+                    <!-- gpg.useagent is true by default, so no extra config needed -->
                     </execution>
                 </executions>
             </plugin>
