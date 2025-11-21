@@ -1,18 +1,18 @@
 package io.jhudson.software.scientist4j;
 
+import io.jhudson.software.scientist4j.exceptions.MismatchException;
+import io.jhudson.software.scientist4j.metrics.MetricsProvider;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.BiFunction;
-
-import io.jhudson.software.scientist4j.exceptions.MismatchException;
-import io.jhudson.software.scientist4j.metrics.MetricsProvider;
 
 public class Experiment<T> {
 
@@ -62,11 +62,11 @@ public class Experiment<T> {
         this.raiseOnMismatch = raiseOnMismatch;
         this.comparator = comparator;
         this.metricsProvider = metricsProvider;
-        controlTimer = getMetricsProvider().timer(NAMESPACE_PREFIX, this.name, "control");
-        candidateTimer = getMetricsProvider().timer(NAMESPACE_PREFIX, this.name, "candidate");
-        mismatchCount = getMetricsProvider().counter(NAMESPACE_PREFIX, this.name, "mismatch");
-        candidateExceptionCount = getMetricsProvider().counter(NAMESPACE_PREFIX, this.name, "candidate.exception");
-        totalCount = getMetricsProvider().counter(NAMESPACE_PREFIX, this.name, "total");
+        controlTimer = metricsProvider.timer(NAMESPACE_PREFIX, this.name, "control");
+        candidateTimer = metricsProvider.timer(NAMESPACE_PREFIX, this.name, "candidate");
+        mismatchCount = metricsProvider.counter(NAMESPACE_PREFIX, this.name, "mismatch");
+        candidateExceptionCount = metricsProvider.counter(NAMESPACE_PREFIX, this.name, "candidate.exception");
+        totalCount = metricsProvider.counter(NAMESPACE_PREFIX, this.name, "total");
         executor = executorService;
     }
 
@@ -102,35 +102,35 @@ public class Experiment<T> {
 
     private T runSync(Callable<T> control, Callable<T> candidate) throws Exception {
         Observation<T> controlObservation;
-        Optional<Observation<T>> candidateObservation = Optional.empty();
+        @Nullable Observation<T> candidateObservation = null;
         if (Math.random() < 0.5) {
             controlObservation = executeResult("control", controlTimer, control, true);
             if (runIf() && enabled()) {
-                candidateObservation = Optional.of(executeResult("candidate", candidateTimer, candidate, false));
+                candidateObservation = executeResult("candidate", candidateTimer, candidate, false);
             }
         } else {
             if (runIf() && enabled()) {
-                candidateObservation = Optional.of(executeResult("candidate", candidateTimer, candidate, false));
+                candidateObservation = executeResult("candidate", candidateTimer, candidate, false);
             }
             controlObservation = executeResult("control", controlTimer, control, true);
         }
 
         countExceptions(candidateObservation, candidateExceptionCount);
-        Result<T> result = new Result<T>(this, controlObservation, candidateObservation, context);
+        Result<T> result = new Result<>(this, controlObservation, candidateObservation, context);
         publish(result);
         return controlObservation.getValue();
     }
 
     public T runAsync(Callable<T> control, Callable<T> candidate) throws Exception {
-        Future<Optional<Observation<T>>> observationFutureCandidate;
+        Future<Observation<T>> observationFutureCandidate;
         Future<Observation<T>> observationFutureControl;
 
         if (runIf() && enabled()) {
             if (Math.random() < 0.5) {
                 observationFutureControl = executor.submit(() -> executeResult("control", controlTimer, control, true));
-                observationFutureCandidate = executor.submit(() -> Optional.of(executeResult("candidate", candidateTimer, candidate, false)));
+                observationFutureCandidate = executor.submit(() -> executeResult("candidate", candidateTimer, candidate, false));
             } else {
-                observationFutureCandidate = executor.submit(() -> Optional.of(executeResult("candidate", candidateTimer, candidate, false)));
+                observationFutureCandidate = executor.submit(() -> executeResult("candidate", candidateTimer, candidate, false));
                 observationFutureControl = executor.submit(() -> executeResult("control", controlTimer, control, true));
             }
         } else {
@@ -151,7 +151,11 @@ public class Experiment<T> {
             try {
                 publishedResult.get();
             } catch (ExecutionException e) {
-                throw (Exception) e.getCause();
+                Throwable cause = e.getCause();
+                if (cause instanceof Exception) {
+                    throw (Exception) cause;
+                }
+                throw new RuntimeException(cause);
             }
         }
 
@@ -159,16 +163,16 @@ public class Experiment<T> {
     }
 
     public T runAsyncCandidateOnly(Callable<T> control, Callable<T> candidate) throws Exception {
-        Future<Optional<Observation<T>>> observationFutureCandidate;
+        Future<Observation<T>> observationFutureCandidate;
         Observation<T> controlObservation;
 
         if (runIf() && enabled()) {
             if (Math.random() < 0.5) {
-                observationFutureCandidate = executor.submit(() -> Optional.of(executeResult("candidate", candidateTimer, candidate, false)));
+                observationFutureCandidate = executor.submit(() -> executeResult("candidate", candidateTimer, candidate, false));
                 controlObservation = executeResult("control", controlTimer, control, true);
             } else {
                 controlObservation = executeResult("control", controlTimer, control, true);
-                observationFutureCandidate = executor.submit(() -> Optional.of(executeResult("candidate", candidateTimer, candidate, false)));
+                observationFutureCandidate = executor.submit(() -> executeResult("candidate", candidateTimer, candidate, false));
             }
         } else {
             controlObservation = executeResult("control", controlTimer, control, true);
@@ -181,15 +185,19 @@ public class Experiment<T> {
             try {
                 publishedResult.get();
             } catch (ExecutionException e) {
-                throw (Exception) e.getCause();
+                Throwable cause = e.getCause();
+                if (cause instanceof Exception) {
+                    throw (Exception) cause;
+                }
+                throw new RuntimeException(cause);
             }
         }
 
         return controlObservation.getValue();
     }
 
-    private Void publishAsync(Observation<T> controlObservation, Future<Optional<Observation<T>>> observationFutureCandidate) throws Exception {
-        Optional<Observation<T>> candidateObservation = Optional.empty();
+    private Void publishAsync(Observation<T> controlObservation, @Nullable Future<Observation<T>> observationFutureCandidate) throws Exception {
+        @Nullable Observation<T> candidateObservation = null;
         if (observationFutureCandidate != null) {
             candidateObservation = observationFutureCandidate.get();
         }
@@ -200,8 +208,8 @@ public class Experiment<T> {
         return null;
     }
 
-    private void countExceptions(Optional<Observation<T>> observation, MetricsProvider.Counter exceptions) {
-        if (observation.isPresent() && observation.get().getException().isPresent()) {
+    private void countExceptions(@Nullable Observation<T> observation, MetricsProvider.Counter exceptions) {
+        if (observation != null && observation.getException() != null) {
             exceptions.increment();
         }
     }
@@ -217,8 +225,9 @@ public class Experiment<T> {
             }
         });
 
-        if (shouldThrow && observation.getException().isPresent()) {
-            throw observation.getException().get();
+        @Nullable Exception exception = observation.getException();
+        if (shouldThrow && exception != null) {
+            throw exception;
         }
 
         return observation;
@@ -229,7 +238,7 @@ public class Experiment<T> {
     }
 
     public boolean compare(Observation<T> controlVal, Observation<T> candidateVal) throws MismatchException {
-        boolean resultsMatch = !candidateVal.getException().isPresent() && compareResults(controlVal.getValue(), candidateVal.getValue());
+        boolean resultsMatch = candidateVal.getException() == null && compareResults(controlVal.getValue(), candidateVal.getValue());
         totalCount.increment();
         if (!resultsMatch) {
             mismatchCount.increment();
@@ -259,9 +268,10 @@ public class Experiment<T> {
 
     private void handleComparisonMismatch(Observation<T> controlVal, Observation<T> candidateVal) throws MismatchException {
         String msg;
-        if (candidateVal.getException().isPresent()) {
-            String stackTrace = candidateVal.getException().get().getStackTrace().toString();
-            String exceptionName = candidateVal.getException().get().getClass().getName();
+        Exception exception = candidateVal.getException();
+        if (exception != null) {
+            String stackTrace = exception.getStackTrace().toString();
+            String exceptionName = exception.getClass().getName();
             msg = new StringBuilder().append(candidateVal.getName()).append(" raised an exception: ")
                 .append(exceptionName).append(" ").append(stackTrace).toString();
         } else {
