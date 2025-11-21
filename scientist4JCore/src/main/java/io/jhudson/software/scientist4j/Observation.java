@@ -7,13 +7,14 @@ public class Observation<T> {
 
     private String name;
     private @Nullable Exception exception;
-    private T value;
+    private @Nullable T value;
     private Timer timer;
 
     public Observation(String name, Timer timer) {
         this.name = name;
         this.timer = timer;
         this.exception = null;
+        this.value = null;
     }
 
     public String getName() {
@@ -24,7 +25,7 @@ public class Observation<T> {
         this.value = o;
     }
 
-    public T getValue() {
+    public @Nullable T getValue() {
         return value;
     }
 

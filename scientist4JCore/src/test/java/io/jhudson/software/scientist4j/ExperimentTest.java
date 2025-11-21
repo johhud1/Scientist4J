@@ -86,7 +86,7 @@ public class ExperimentTest {
 
     @Test
     public void itWorksWithAnExtendedClass() throws Exception {
-        Experiment<Integer> exp = new TestPublishExperiment<>("test", new NoopMetricsProvider());
+        Experiment<Integer> exp = new TestPublishExperiment("test", new NoopMetricsProvider());
         exp.run(this::safeFunction, this::safeFunction);
     }
 

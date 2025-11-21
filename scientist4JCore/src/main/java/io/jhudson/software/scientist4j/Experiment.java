@@ -90,7 +90,7 @@ public class Experiment<T> {
         return name;
     }
 
-    public T run(Callable<T> control, Callable<T> candidate) throws Exception {
+    public @Nullable T run(Callable<T> control, Callable<T> candidate) throws Exception {
         if (isAsyncCandidateOnly()) {
             return runAsyncCandidateOnly(control, candidate);
         } else if (isAsync()) {
@@ -100,7 +100,7 @@ public class Experiment<T> {
         }
     }
 
-    private T runSync(Callable<T> control, Callable<T> candidate) throws Exception {
+    private @Nullable T runSync(Callable<T> control, Callable<T> candidate) throws Exception {
         Observation<T> controlObservation;
         @Nullable Observation<T> candidateObservation = null;
         if (Math.random() < 0.5) {
@@ -121,7 +121,7 @@ public class Experiment<T> {
         return controlObservation.getValue();
     }
 
-    public T runAsync(Callable<T> control, Callable<T> candidate) throws Exception {
+    public @Nullable T runAsync(Callable<T> control, Callable<T> candidate) throws Exception {
         Future<Observation<T>> observationFutureCandidate;
         Future<Observation<T>> observationFutureControl;
 
@@ -162,7 +162,7 @@ public class Experiment<T> {
         return controlObservation.getValue();
     }
 
-    public T runAsyncCandidateOnly(Callable<T> control, Callable<T> candidate) throws Exception {
+    public @Nullable T runAsyncCandidateOnly(Callable<T> control, Callable<T> candidate) throws Exception {
         Future<Observation<T>> observationFutureCandidate;
         Observation<T> controlObservation;
 
@@ -238,7 +238,16 @@ public class Experiment<T> {
     }
 
     public boolean compare(Observation<T> controlVal, Observation<T> candidateVal) throws MismatchException {
-        boolean resultsMatch = candidateVal.getException() == null && compareResults(controlVal.getValue(), candidateVal.getValue());
+        T controlValue = controlVal.getValue();
+        T candidateValue = candidateVal.getValue();
+        boolean resultsMatch;
+        if (candidateVal.getException() != null) {
+            resultsMatch = false;
+        } else if (controlValue == null || candidateValue == null) {
+            resultsMatch = controlValue == null && candidateValue == null;
+        } else {
+            resultsMatch = compareResults(controlValue, candidateValue);
+        }
         totalCount.increment();
         if (!resultsMatch) {
             mismatchCount.increment();
@@ -275,8 +284,11 @@ public class Experiment<T> {
             msg = new StringBuilder().append(candidateVal.getName()).append(" raised an exception: ")
                 .append(exceptionName).append(" ").append(stackTrace).toString();
         } else {
+            Object controlValue = controlVal.getValue();
+            Object candidateValue = candidateVal.getValue();
             msg = new StringBuilder().append(candidateVal.getName()).append(" does not match control value (")
-                .append(controlVal.getValue().toString()).append(" != ").append(candidateVal.getValue().toString()).append(")").toString();
+                .append(controlValue != null ? controlValue.toString() : "null").append(" != ")
+                .append(candidateValue != null ? candidateValue.toString() : "null").append(")").toString();
         }
         throw new MismatchException(msg);
     }

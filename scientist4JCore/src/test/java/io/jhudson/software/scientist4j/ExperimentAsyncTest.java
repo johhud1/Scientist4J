@@ -104,7 +104,7 @@ public class ExperimentAsyncTest {
 
   @Test
   public void itWorksWithAnExtendedClass() {
-    Experiment<Integer> exp = new TestPublishExperiment<>("test", new NoopMetricsProvider());
+    Experiment<Integer> exp = new TestPublishExperiment("test", new NoopMetricsProvider());
     try {
       exp.run(this::safeFunction, this::safeFunction);
     } catch (Exception e) {

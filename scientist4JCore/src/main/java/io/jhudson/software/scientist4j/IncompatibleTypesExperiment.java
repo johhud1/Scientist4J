@@ -122,7 +122,11 @@ public class IncompatibleTypesExperiment<T, U> {
         IncompatibleTypesExperimentResult<T, U> result =
                 new IncompatibleTypesExperimentResult<>(this, controlObservation, candidateObservation, context);
         publish(result);
-        return controlObservation.getValue();
+        T value = controlObservation.getValue();
+        if (value == null) {
+            throw new IllegalStateException("Control observation has no value");
+        }
+        return value;
     }
 
     public T runAsync(final Callable<T> control, final Callable<U> candidate) throws Exception {
@@ -171,7 +175,11 @@ public class IncompatibleTypesExperiment<T, U> {
             }
         }
 
-        return controlObservation.getValue();
+        T value = controlObservation.getValue();
+        if (value == null) {
+            throw new IllegalStateException("Control observation has no value");
+        }
+        return value;
     }
 
     private Void publishAsync(final Observation<T> controlObservation,
@@ -221,8 +229,10 @@ public class IncompatibleTypesExperiment<T, U> {
 
     public boolean compare(final Observation<T> controlVal, final Observation<U> candidateVal)
             throws MismatchException {
-        boolean resultsMatch = candidateVal.getException() == null &&
-                compareResults(controlVal.getValue(), candidateVal.getValue());
+        T controlValue = controlVal.getValue();
+        U candidateValue = candidateVal.getValue();
+        boolean resultsMatch = candidateVal.getException() == null && controlValue != null && candidateValue != null
+                && compareResults(controlValue, candidateValue);
         totalCount.increment();
         if (!resultsMatch) {
             mismatchCount.increment();
@@ -255,9 +265,11 @@ public class IncompatibleTypesExperiment<T, U> {
             String exceptionName = exception.getClass().getName();
             msg = candidateVal.getName() + " raised an exception: " + exceptionName + " " + stackTrace;
         } else {
-            msg =
-                    candidateVal.getName() + " does not match control value (" + controlVal.getValue().toString() + " != " +
-                            candidateVal.getValue().toString() + ")";
+            Object controlValue = controlVal.getValue();
+            Object candidateValue = candidateVal.getValue();
+            msg = candidateVal.getName() + " does not match control value (" +
+                    (controlValue != null ? controlValue.toString() : "null") + " != " +
+                    (candidateValue != null ? candidateValue.toString() : "null") + ")";
         }
         throw new MismatchException(msg);
     }

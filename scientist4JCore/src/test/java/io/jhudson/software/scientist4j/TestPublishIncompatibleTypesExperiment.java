@@ -13,7 +13,11 @@ public class TestPublishIncompatibleTypesExperiment extends IncompatibleTypesExp
 
     @Override
     protected void publish(IncompatibleTypesExperimentResult<Integer, String> result) {
-        assertThat(result.getCandidate().get().getDuration()).isGreaterThan(0L);
+        Observation<String> candidate = result.getCandidate();
+        assertThat(candidate).isNotNull();
+        if (candidate != null) {
+            assertThat(candidate.getDuration()).isGreaterThan(0L);
+        }
         assertThat(result.getControl().getDuration()).isGreaterThan(0L);
     }
 }
