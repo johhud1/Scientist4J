@@ -11,12 +11,15 @@
     <description>A Java port of Github's Scientist library for refactoring critical code paths</description>
     <url>https://www.github.com/johhud1/Scientist4J</url>
 
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
+
+    <modules>
+        <module>scientist4JCore</module>
+    </modules>
 
     <!-- <distributionManagement>
         <repository>
@@ -25,16 +28,16 @@
             <url>https://maven.pkg.github.com/mhw/Scientist4J</url>
         </repository>
     </distributionManagement> -->
-<distributionManagement>
-  <snapshotRepository>
-    <id>ossrh</id>
-    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-  </snapshotRepository>
-  <repository>
-    <id>ossrh</id>
-    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-  </repository>
-</distributionManagement>
+    <distributionManagement>
+    <snapshotRepository>
+        <id>ossrh</id>
+        <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+        <id>ossrh</id>
+        <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    </distributionManagement>
 
     <build>
         <plugins>
@@ -135,7 +138,4 @@
       <tag>HEAD</tag>
   </scm>
 
-    <modules>
-        <module>Scientist4JCore</module>
-    </modules>
 </project>
