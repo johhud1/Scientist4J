@@ -19,7 +19,7 @@ import java.util.function.BiPredicate;
  * @param <T> The return type of the control function.
  * @param <U> The return type of the candidate function.
  */
-public class IncompatibleTypesExperiment<T, U> {
+public class IncompatibleTypesExperiment<@Nullable T, @Nullable U> {
     private static final String CONTROL = "control";
     private static final String CANDIDATE = "candidate";
     private final ExecutorService executor;
@@ -256,8 +256,8 @@ public class IncompatibleTypesExperiment<T, U> {
             msg = candidateVal.getName() + " raised an exception: " + exceptionName + " " + stackTrace;
         } else {
             msg =
-                    candidateVal.getName() + " does not match control value (" + controlVal.getValue().toString() + " != " +
-                            candidateVal.getValue().toString() + ")";
+                    candidateVal.getName() + " does not match control value (" + controlVal.getValueString() + " != " +
+                            candidateVal.getValueString() + ")";
         }
         throw new MismatchException(msg);
     }

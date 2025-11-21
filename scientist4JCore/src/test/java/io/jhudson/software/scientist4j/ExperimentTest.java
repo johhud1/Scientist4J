@@ -1,18 +1,22 @@
 package io.jhudson.software.scientist4j;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.function.BiFunction;
+
+import org.junit.Test;
+
+import com.codahale.metrics.Counter;
+
 import io.jhudson.software.scientist4j.exceptions.MismatchException;
 import io.jhudson.software.scientist4j.metrics.DropwizardMetricsProvider;
 import io.jhudson.software.scientist4j.metrics.MicrometerMetricsProvider;
 import io.jhudson.software.scientist4j.metrics.NoopMetricsProvider;
-
-import com.codahale.metrics.Counter;
-import org.junit.Test;
-
-import java.util.Date;
-import java.util.function.BiFunction;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 public class ExperimentTest {
 
@@ -116,11 +120,18 @@ public class ExperimentTest {
     public void shouldUseCustomComparator() throws Exception {
         @SuppressWarnings("unchecked") final BiFunction<Integer, Integer, Boolean> comparator = mock(BiFunction.class);
         when(comparator.apply(1, 2)).thenReturn(false);
-        final Experiment<Integer> e = new ExperimentBuilder<Integer>()
-                .withName("test")
-                .withComparator(comparator)
-                .withMetricsProvider(new NoopMetricsProvider())
-                .build();
+        // final Experiment<Integer> e = new ExperimentBuilder<Integer>()
+        //         .withName("test")
+        //         .withComparator(comparator)
+        //         .withMetricsProvider(new NoopMetricsProvider())
+        //         .build();
+        Experiment<Integer> e = new Experiment<>(
+            "test",
+            new HashMap<String, Object>(),
+            false,
+            new NoopMetricsProvider(),
+            comparator
+            );
 
         e.run(() -> 1, () -> 2);
 

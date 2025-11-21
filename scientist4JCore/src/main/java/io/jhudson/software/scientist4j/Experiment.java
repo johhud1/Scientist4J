@@ -1,9 +1,5 @@
 package io.jhudson.software.scientist4j;
 
-import io.jhudson.software.scientist4j.exceptions.MismatchException;
-import io.jhudson.software.scientist4j.metrics.MetricsProvider;
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -14,7 +10,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.BiFunction;
 
-public class Experiment<T> {
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import io.jhudson.software.scientist4j.exceptions.MismatchException;
+import io.jhudson.software.scientist4j.metrics.MetricsProvider;
+
+public class Experiment<@Nullable T> {
 
     private final ExecutorService executor;
     private static final String NAMESPACE_PREFIX = "scientist";
@@ -276,7 +277,7 @@ public class Experiment<T> {
                 .append(exceptionName).append(" ").append(stackTrace).toString();
         } else {
             msg = new StringBuilder().append(candidateVal.getName()).append(" does not match control value (")
-                .append(controlVal.getValue().toString()).append(" != ").append(candidateVal.getValue().toString()).append(")").toString();
+                .append(controlVal.getValueString()).append(" != ").append(candidateVal.getValueString()).append(")").toString();
         }
         throw new MismatchException(msg);
     }

@@ -15,8 +15,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>21</java.version>
         <checkerframework.version>3.47.0</checkerframework.version>
     </properties>
 
@@ -43,7 +42,20 @@
     </repository>
     </distributionManagement>
 
+
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>org.apache.maven.plugins</artifactId>
+                    <groupId>maven-compiler-plugin</groupId>
+                    <version>3.13.0</version>
+                    <configuration>
+                        <release>${java.version}</release>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <!-- <plugin>
                 <groupId>org.sonatype.plugins</groupId>

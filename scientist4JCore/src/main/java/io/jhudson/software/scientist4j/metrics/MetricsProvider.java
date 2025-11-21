@@ -1,10 +1,12 @@
 package io.jhudson.software.scientist4j.metrics;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 public interface MetricsProvider<T> {
 
-    Timer timer(String... nameComponents);
+    Timer timer(@NonNull String... nameComponents);
 
-    Counter counter(String... nameComponents);
+    Counter counter(@NonNull String... nameComponents);
 
     interface Timer {
 

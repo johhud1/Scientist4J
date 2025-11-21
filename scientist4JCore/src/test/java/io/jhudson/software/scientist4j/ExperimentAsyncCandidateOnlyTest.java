@@ -1,16 +1,18 @@
 package io.jhudson.software.scientist4j;
 
-import io.jhudson.software.scientist4j.exceptions.MismatchException;
-import io.jhudson.software.scientist4j.metrics.NoopMetricsProvider;
-
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+
+import io.jhudson.software.scientist4j.exceptions.MismatchException;
+import io.jhudson.software.scientist4j.metrics.NoopMetricsProvider;
 
 public class ExperimentAsyncCandidateOnlyTest {
 
@@ -139,11 +141,19 @@ public class ExperimentAsyncCandidateOnlyTest {
   public void controlRunsOnMainThreadCustomExecutorService() throws Exception {
     String threadName = "main";
     ThreadFactory threadFactory = runnable -> new Thread(runnable, threadName);
-    Experiment<String> exp = new ExperimentBuilder<String>()
-        .withName("test")
-        .withMetricsProvider(new NoopMetricsProvider())
-        .withExecutorService(Executors.newFixedThreadPool(4, threadFactory))
-        .build();
+    // Experiment<String> exp = new ExperimentBuilder<String>()
+    //     .withName("test")
+    //     .withMetricsProvider(new NoopMetricsProvider())
+    //     .withExecutorService(Executors.newFixedThreadPool(4, threadFactory))
+    //     .build();
+    Experiment<String> exp = new Experiment<>(
+      "test",
+      new HashMap<String, Object>(),
+      false,
+      new NoopMetricsProvider(),
+      Objects::equals,
+      Executors.newFixedThreadPool(4, threadFactory)
+    );
     Callable<String> getThreadName = () -> Thread.currentThread().getName();
 
     String val = exp.runAsyncCandidateOnly(getThreadName, getThreadName);

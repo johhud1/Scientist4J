@@ -1,14 +1,15 @@
 package io.jhudson.software.scientist4j;
 
-import io.jhudson.software.scientist4j.metrics.MetricsProvider.Timer;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
+import io.jhudson.software.scientist4j.metrics.MetricsProvider.Timer;
 
 public class Observation<T> {
 
-    private String name;
+    private final String name;
+    private final Timer timer;
     private @Nullable Exception exception;
-    private T value;
-    private Timer timer;
+    private @Nullable T value;
 
     public Observation(String name, Timer timer) {
         this.name = name;
@@ -20,12 +21,16 @@ public class Observation<T> {
         return name;
     }
 
-    public void setValue(T o) {
+    public void setValue(@Nullable T o) {
         this.value = o;
     }
 
-    public T getValue() {
+    public @Nullable T getValue() {
         return value;
+    }
+
+    public String getValueString() {
+        return value == null ? "[null]" : value.toString();
     }
 
     public void setException(Exception e) {

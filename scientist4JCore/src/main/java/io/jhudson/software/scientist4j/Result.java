@@ -5,14 +5,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Map;
 
-public class Result<T> {
-    private Experiment experiment;
-    private Observation control;
+public class Result<@Nullable T> {
+    private Experiment<T> experiment;
+    private Observation<T> control;
     private @Nullable Observation<T> candidate;
     private @Nullable Boolean match;
     private Map<String, Object> context;
 
-    public Result(Experiment experiment, Observation<T> control, @Nullable Observation<T> candidate, Map<String, Object> context) throws MismatchException {
+    public Result(Experiment<T> experiment, Observation<T> control, @Nullable Observation<T> candidate, Map<String, Object> context) throws MismatchException {
         this.experiment = experiment;
         this.control = control;
         this.candidate = candidate;

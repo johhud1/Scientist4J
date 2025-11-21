@@ -11,7 +11,7 @@ public class TestPublishExperiment<Integer> extends Experiment<Integer> {
 
   @Override
   protected void publish(Result<Integer> r) {
-    assertThat(r.getCandidate().get().getDuration()).isGreaterThan(0L);
+    assertThat(r.getCandidate().getDuration()).isGreaterThan(0L);
     assertThat(r.getControl().getDuration()).isGreaterThan(0L);
   }
 

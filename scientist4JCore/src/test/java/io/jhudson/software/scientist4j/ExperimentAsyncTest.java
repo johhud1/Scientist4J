@@ -6,6 +6,8 @@ import io.jhudson.software.scientist4j.metrics.NoopMetricsProvider;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -137,11 +139,14 @@ public class ExperimentAsyncTest {
   public void allowsUsingCustomExecutorService() throws Exception {
     String threadName = "customThread";
     ThreadFactory threadFactory = runnable -> new Thread(runnable, threadName);
-    Experiment<String> exp = new ExperimentBuilder<String>()
-        .withName("test")
-        .withMetricsProvider(new NoopMetricsProvider())
-        .withExecutorService(Executors.newFixedThreadPool(4, threadFactory))
-        .build();
+    Experiment<String> exp = new Experiment<>(
+      "test",
+      new HashMap<String, Object>(),
+      false,
+      new NoopMetricsProvider(),
+      Objects::equals,
+      Executors.newFixedThreadPool(4, threadFactory)
+    );
     Callable<String> getThreadName = () -> Thread.currentThread().getName();
 
     String val = exp.runAsync(getThreadName, getThreadName);

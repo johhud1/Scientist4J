@@ -1,15 +1,16 @@
 package io.jhudson.software.scientist4j;
 
-import io.jhudson.software.scientist4j.exceptions.MismatchException;
+import java.util.Map;
+
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.Map;
+import io.jhudson.software.scientist4j.exceptions.MismatchException;
 
 /**
  * @param <T> The return type of the control function
  * @param <U> The return type of the candidate function.
  */
-public class IncompatibleTypesExperimentResult<T, U> {
+public class IncompatibleTypesExperimentResult<@Nullable T, @Nullable U> {
     private final Observation<T> control;
     private final @Nullable Observation<U> candidate;
     private @Nullable Boolean match;
