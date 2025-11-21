@@ -2,16 +2,17 @@
 
 A port of Github's refactoring tool [Scientist](https://github.com/github/scientist) in Java
 
-This fork backports Scientist4J to use Dropwizard Metrics 4.2.10.
-You might want to use it because Dropwizard Metrics 5.x is described as "on pause".
+This fork updates and enhances the original Scientist4J with MethodInvocationHander as well as additional examples and quality of life improvements.
 
-This fork is published through JitPack.
+This fork is published with jreleaser.
 
+TODO: fix these badges
 [![](https://jitpack.io/v/mhw/Scientist4J.svg)](https://jitpack.io/#mhw/Scientist4J)
 
 The original upstream package is published through Maven Central.
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.rawls238/Scientist4J/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.rawls238/Scientist4J)
+END TODO
 
 # Installation
 
@@ -67,6 +68,11 @@ Behind the scenes the following occurs in both cases:
 * Swallows (but records) any exceptions raised by the candidate
 * Publishes all this information.
 
+## InvocationMethodHandler usage
+TODO: Fill this out
+
+## Spring integration
+TODO: figure out how to do this and document
 
 ## Metrics
 
@@ -106,6 +112,12 @@ Users can optionally override the following functions:
 * `enabled` (to limit what % of users get exposed to the new code path - by default it's 100%)
 * `runIf` (to enforce conditional behavior on who should be exposed to the new code path)
 * `isAsync` (force using the async for legacy code or move to `runAsync` method)
+
+## Roadmap
+* Fix up README
+* Add invocationMethodHandler support
+* Research and implement drop in support for with spring wired beans
+* Research how to implement spans/sampling to export mismatches easily
 
 
 License: MIT
