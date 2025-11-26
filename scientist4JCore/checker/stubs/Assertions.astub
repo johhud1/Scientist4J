@@ -1,0 +1,16 @@
+package org.assertj.core.api;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+public final class Assertions {
+
+    public static <T> AbstractObjectAssert<?, T> assertThat(@Nullable T actual);
+
+    public static <T extends Comparable<? super T>> AbstractComparableAssert<?, T> assertThat(@Nullable T actual);
+
+    public static AbstractDoubleAssert<?> assertThat(@Nullable Double actual);
+
+    public static AbstractBooleanAssert<?> assertThat(@Nullable Boolean actual);
+
+    public static AbstractCharSequenceAssert<?, String> assertThat(@Nullable String actual);
+}
