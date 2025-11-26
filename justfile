@@ -1,3 +1,7 @@
+
+test:
+    ./mvnw test
+
 release-dryrun:
     ./mvnw -Prelease jreleaser:full-release -Djreleaser.select.current.platform -Djreleaser.dry.run=true
 

@@ -114,10 +114,13 @@ Users can optionally override the following functions:
 * `isAsync` (force using the async for legacy code or move to `runAsync` method)
 
 ## Roadmap
-* Fix up README
-* Add invocationMethodHandler support
-* Research and implement drop in support for with spring wired beans
-* Research how to implement spans/sampling to export mismatches easily
+- [ ] Fix up README
+- [ ] Add invocationMethodHandler mechanism for drop in test/control of classes implementing the same interface
+- [ ] Get maven central working, build pipeline and badges
+- [ ] Research and implement drop in support for working with spring wired beans
+- [ ] Add example repo demonstrating usage
+- [ ] Research how to implement spans/sampling to export mismatches easily
+- [ ] Research and implement metric export
 
 
 License: MIT

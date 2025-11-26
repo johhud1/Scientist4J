@@ -1,14 +1,14 @@
 package io.jhudson.software.scientist4j;
 
+import io.jhudson.software.scientist4j.exceptions.MismatchException;
+import io.jhudson.software.scientist4j.metrics.MetricsProvider;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.function.BiPredicate;
-
-import io.jhudson.software.scientist4j.exceptions.MismatchException;
-import io.jhudson.software.scientist4j.metrics.MetricsProvider;
 
 /**
  * An Experiment that can handle a control and candidate function that return incompatible types.
@@ -67,11 +67,11 @@ public class IncompatibleTypesExperiment<T, U> {
         this.raiseOnMismatch = raiseOnMismatch;
         this.comparator = comparator;
         this.metricsProvider = metricsProvider;
-        controlTimer = getMetricsProvider().timer(NAMESPACE_PREFIX, this.name, CONTROL);
-        candidateTimer = getMetricsProvider().timer(NAMESPACE_PREFIX, this.name, CANDIDATE);
-        mismatchCount = getMetricsProvider().counter(NAMESPACE_PREFIX, this.name, "mismatch");
-        candidateExceptionCount = getMetricsProvider().counter(NAMESPACE_PREFIX, this.name, "candidate.exception");
-        totalCount = getMetricsProvider().counter(NAMESPACE_PREFIX, this.name, "total");
+        controlTimer = metricsProvider.timer(NAMESPACE_PREFIX, this.name, CONTROL);
+        candidateTimer = metricsProvider.timer(NAMESPACE_PREFIX, this.name, CANDIDATE);
+        mismatchCount = metricsProvider.counter(NAMESPACE_PREFIX, this.name, "mismatch");
+        candidateExceptionCount = metricsProvider.counter(NAMESPACE_PREFIX, this.name, "candidate.exception");
+        totalCount = metricsProvider.counter(NAMESPACE_PREFIX, this.name, "total");
         executor = executorService;
     }
 
@@ -105,15 +105,15 @@ public class IncompatibleTypesExperiment<T, U> {
 
     private T runSync(final Callable<T> control, final Callable<U> candidate) throws Exception {
         Observation<T> controlObservation;
-        Optional<Observation<U>> candidateObservation = Optional.empty();
+        @Nullable Observation<U> candidateObservation = null;
         if (Math.random() < 0.5) {
             controlObservation = executeResult(CONTROL, controlTimer, control, true);
             if (runIf() && enabled()) {
-                candidateObservation = Optional.of(executeResult(CANDIDATE, candidateTimer, candidate, false));
+                candidateObservation = executeResult(CANDIDATE, candidateTimer, candidate, false);
             }
         } else {
             if (runIf() && enabled()) {
-                candidateObservation = Optional.of(executeResult(CANDIDATE, candidateTimer, candidate, false));
+                candidateObservation = executeResult(CANDIDATE, candidateTimer, candidate, false);
             }
             controlObservation = executeResult(CONTROL, controlTimer, control, true);
         }
@@ -122,11 +122,15 @@ public class IncompatibleTypesExperiment<T, U> {
         IncompatibleTypesExperimentResult<T, U> result =
                 new IncompatibleTypesExperimentResult<>(this, controlObservation, candidateObservation, context);
         publish(result);
-        return controlObservation.getValue();
+        T value = controlObservation.getValue();
+        if (value == null) {
+            throw new IllegalStateException("Control observation has no value");
+        }
+        return value;
     }
 
     public T runAsync(final Callable<T> control, final Callable<U> candidate) throws Exception {
-        Future<Optional<Observation<U>>> observationFutureCandidate;
+        Future<Observation<U>> observationFutureCandidate;
         Future<Observation<T>> observationFutureControl;
 
         if (runIf() && enabled()) {
@@ -134,10 +138,10 @@ public class IncompatibleTypesExperiment<T, U> {
                 observationFutureControl =
                         executor.submit(() -> executeResult(CONTROL, controlTimer, control, true));
                 observationFutureCandidate = executor.submit(
-                        () -> Optional.of(executeResult(CANDIDATE, candidateTimer, candidate, false)));
+                        () -> executeResult(CANDIDATE, candidateTimer, candidate, false));
             } else {
                 observationFutureCandidate = executor.submit(
-                        () -> Optional.of(executeResult(CANDIDATE, candidateTimer, candidate, false)));
+                        () -> executeResult(CANDIDATE, candidateTimer, candidate, false));
                 observationFutureControl =
                         executor.submit(() -> executeResult(CONTROL, controlTimer, control, true));
             }
@@ -163,16 +167,24 @@ public class IncompatibleTypesExperiment<T, U> {
             try {
                 publishedResult.get();
             } catch (ExecutionException e) {
-                throw (Exception) e.getCause();
+                Throwable cause = e.getCause();
+                if (cause instanceof Exception) {
+                    throw (Exception) cause;
+                }
+                throw new RuntimeException(cause);
             }
         }
 
-        return controlObservation.getValue();
+        T value = controlObservation.getValue();
+        if (value == null) {
+            throw new IllegalStateException("Control observation has no value");
+        }
+        return value;
     }
 
     private Void publishAsync(final Observation<T> controlObservation,
-                              final Future<Optional<Observation<U>>> observationFutureCandidate) throws Exception {
-        Optional<Observation<U>> candidateObservation = Optional.empty();
+                              final @Nullable Future<Observation<U>> observationFutureCandidate) throws Exception {
+        @Nullable Observation<U> candidateObservation = null;
         if (observationFutureCandidate != null) {
             candidateObservation = observationFutureCandidate.get();
         }
@@ -184,8 +196,8 @@ public class IncompatibleTypesExperiment<T, U> {
         return null;
     }
 
-    private void countExceptions(final Optional<Observation<U>> observation, final MetricsProvider.Counter exceptions) {
-        if (observation.isPresent() && observation.get().getException().isPresent()) {
+    private void countExceptions(final @Nullable Observation<U> observation, final MetricsProvider.Counter exceptions) {
+        if (observation != null && observation.getException() != null) {
             exceptions.increment();
         }
     }
@@ -203,9 +215,9 @@ public class IncompatibleTypesExperiment<T, U> {
             }
         });
 
-        Optional<Exception> exception = observation.getException();
-        if (shouldThrow && exception.isPresent()) {
-            throw exception.get();
+        Exception exception = observation.getException();
+        if (shouldThrow && exception != null) {
+            throw exception;
         }
 
         return observation;
@@ -217,8 +229,10 @@ public class IncompatibleTypesExperiment<T, U> {
 
     public boolean compare(final Observation<T> controlVal, final Observation<U> candidateVal)
             throws MismatchException {
-        boolean resultsMatch = !candidateVal.getException().isPresent() &&
-                compareResults(controlVal.getValue(), candidateVal.getValue());
+        T controlValue = controlVal.getValue();
+        U candidateValue = candidateVal.getValue();
+        boolean resultsMatch = candidateVal.getException() == null && controlValue != null && candidateValue != null
+                && compareResults(controlValue, candidateValue);
         totalCount.increment();
         if (!resultsMatch) {
             mismatchCount.increment();
@@ -245,15 +259,17 @@ public class IncompatibleTypesExperiment<T, U> {
     private void handleComparisonMismatch(final Observation<T> controlVal, final Observation<U> candidateVal)
             throws MismatchException {
         String msg;
-        Optional<Exception> exception = candidateVal.getException();
-        if (exception.isPresent()) {
-            String stackTrace = Arrays.toString(exception.get().getStackTrace());
-            String exceptionName = exception.get().getClass().getName();
+        Exception exception = candidateVal.getException();
+        if (exception != null) {
+            String stackTrace = Arrays.toString(exception.getStackTrace());
+            String exceptionName = exception.getClass().getName();
             msg = candidateVal.getName() + " raised an exception: " + exceptionName + " " + stackTrace;
         } else {
-            msg =
-                    candidateVal.getName() + " does not match control value (" + controlVal.getValue().toString() + " != " +
-                            candidateVal.getValue().toString() + ")";
+            Object controlValue = controlVal.getValue();
+            Object candidateValue = candidateVal.getValue();
+            msg = candidateVal.getName() + " does not match control value (" +
+                    (controlValue != null ? controlValue.toString() : "null") + " != " +
+                    (candidateValue != null ? candidateValue.toString() : "null") + ")";
         }
         throw new MismatchException(msg);
     }

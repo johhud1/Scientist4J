@@ -1,0 +1,14 @@
+package java.lang.reflect;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+public interface InvocationHandler {
+   @Nullable Object invoke(Object var1, Method var2, Object[] var3) throws Throwable;
+
+   @CallerSensitive
+   static @Nullable Object invokeDefault(Object var0, Method var1, Object... var2) throws Throwable {
+      Objects.requireNonNull(var0);
+      Objects.requireNonNull(var1);
+      return Proxy.invokeDefault(var0, var1, var2, Reflection.getCallerClass());
+   }
+}
