@@ -13,4 +13,8 @@ public final class Assertions {
     public static AbstractBooleanAssert<?> assertThat(@Nullable Boolean actual);
 
     public static AbstractCharSequenceAssert<?, String> assertThat(@Nullable String actual);
+
+    // TODO: Figure this out. Get all kinds of errors 
+    // [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:testCompile (default-testCompile) on project scientist4jcore: Compilation failure [ERROR] error: Compiler 'Resolve' class doesn't contain required 'find*' method
+    // when running nullness checker on tests and trying to add stubs to cover unnannotated code library code
 }

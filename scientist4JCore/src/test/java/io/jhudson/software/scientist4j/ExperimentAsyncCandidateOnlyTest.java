@@ -6,6 +6,7 @@ import io.jhudson.software.scientist4j.metrics.NoopMetricsProvider;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -148,7 +149,8 @@ public class ExperimentAsyncCandidateOnlyTest {
 
     String val = exp.runAsyncCandidateOnly(getThreadName, getThreadName);
 
-    assertThat(val).isEqualTo(threadName);
+    assertThat(val).isNotNull();
+    assertThat(Objects.requireNonNull(val)).isEqualTo(threadName);
   }
 
   @Test
