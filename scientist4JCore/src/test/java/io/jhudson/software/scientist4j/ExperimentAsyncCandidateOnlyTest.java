@@ -149,8 +149,7 @@ public class ExperimentAsyncCandidateOnlyTest {
 
     String val = exp.runAsyncCandidateOnly(getThreadName, getThreadName);
 
-    assertThat(val).isNotNull();
-    assertThat(Objects.requireNonNull(val)).isEqualTo(threadName);
+    assertThat(val).isEqualTo(threadName);
   }
 
   @Test

@@ -16,7 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>21</java.version>
-        <checkerframework.version>3.47.0</checkerframework.version>
+        <checkerframework.version>3.52.0</checkerframework.version>
     </properties>
 
     <modules>

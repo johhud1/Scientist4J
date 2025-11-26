@@ -147,8 +147,7 @@ public class ExperimentAsyncTest {
 
     String val = exp.runAsync(getThreadName, getThreadName);
 
-    assertThat(val).isNotNull();
-    assertThat(Objects.requireNonNull(val)).isEqualTo(threadName);
+    assertThat(val).isEqualTo(threadName);
   }
 
   @Test
