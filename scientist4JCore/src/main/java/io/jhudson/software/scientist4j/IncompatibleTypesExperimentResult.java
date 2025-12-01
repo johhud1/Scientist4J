@@ -1,9 +1,9 @@
 package io.jhudson.software.scientist4j;
 
-import java.util.Map;
-import java.util.Optional;
-
 import io.jhudson.software.scientist4j.exceptions.MismatchException;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.Map;
 
 /**
  * @param <T> The return type of the control function
@@ -11,28 +11,28 @@ import io.jhudson.software.scientist4j.exceptions.MismatchException;
  */
 public class IncompatibleTypesExperimentResult<T, U> {
     private final Observation<T> control;
-    private final Optional<Observation<U>> candidate;
-    private Optional<Boolean> match;
+    private final @Nullable Observation<U> candidate;
+    private @Nullable Boolean match;
     private final Map<String, Object> context;
 
     public IncompatibleTypesExperimentResult(final IncompatibleTypesExperiment<T, U> experiment, final Observation<T> control,
-                                             final Optional<Observation<U>> candidate, final Map<String, Object> context) throws MismatchException {
+                                             final @Nullable Observation<U> candidate, final Map<String, Object> context) throws MismatchException {
         this.control = control;
         this.candidate = candidate;
         this.context = context;
-        this.match = Optional.empty();
+        this.match = null;
 
-        if (candidate.isPresent()) {
+        if (candidate != null) {
             try {
-                this.match = Optional.of(experiment.compare(control, candidate.get()));
+                this.match = experiment.compare(control, candidate);
             } catch (MismatchException e) {
-                this.match = Optional.of(false);
+                this.match = false;
                 throw e;
             }
         }
     }
 
-    public Optional<Boolean> getMatch() {
+    public @Nullable Boolean getMatch() {
         return match;
     }
 
@@ -40,7 +40,7 @@ public class IncompatibleTypesExperimentResult<T, U> {
         return control;
     }
 
-    public Optional<Observation<U>> getCandidate() {
+    public @Nullable Observation<U> getCandidate() {
         return candidate;
     }
 

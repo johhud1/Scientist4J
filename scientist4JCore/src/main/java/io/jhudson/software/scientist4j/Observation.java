@@ -1,20 +1,20 @@
 package io.jhudson.software.scientist4j;
 
-import java.util.Optional;
-
 import io.jhudson.software.scientist4j.metrics.MetricsProvider.Timer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class Observation<T> {
 
     private String name;
-    private Optional<Exception> exception;
-    private T value;
+    private @Nullable Exception exception;
+    private @Nullable T value;
     private Timer timer;
 
     public Observation(String name, Timer timer) {
-      this.name = name;
-      this.timer = timer;
-      this.exception = Optional.empty();
+        this.name = name;
+        this.timer = timer;
+        this.exception = null;
+        this.value = null;
     }
 
     public String getName() {
@@ -25,15 +25,15 @@ public class Observation<T> {
         this.value = o;
     }
 
-    public T getValue() {
+    public @Nullable T getValue() {
         return value;
     }
 
     public void setException(Exception e) {
-        this.exception = Optional.of(e);
+        this.exception = e;
     }
 
-    public Optional<Exception> getException() {
+    public @Nullable Exception getException() {
         return exception;
     }
 

@@ -6,6 +6,7 @@ import io.jhudson.software.scientist4j.metrics.NoopMetricsProvider;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -106,7 +107,7 @@ public class ExperimentAsyncCandidateOnlyTest {
 
   @Test
   public void itWorksWithAnExtendedClass() {
-    Experiment<Integer> exp = new TestPublishExperiment<>("test", new NoopMetricsProvider());
+    Experiment<Integer> exp = new TestPublishExperiment("test", new NoopMetricsProvider());
     try {
       exp.run(this::safeFunction, this::safeFunction);
     } catch (Exception e) {

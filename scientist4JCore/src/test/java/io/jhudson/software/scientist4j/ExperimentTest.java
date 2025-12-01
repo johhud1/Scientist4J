@@ -1,18 +1,22 @@
 package io.jhudson.software.scientist4j;
 
-import io.jhudson.software.scientist4j.exceptions.MismatchException;
-import io.jhudson.software.scientist4j.metrics.DropwizardMetricsProvider;
-import io.jhudson.software.scientist4j.metrics.MicrometerMetricsProvider;
-import io.jhudson.software.scientist4j.metrics.NoopMetricsProvider;
-
-import com.codahale.metrics.Counter;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Date;
 import java.util.function.BiFunction;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.junit.Test;
+
+import com.codahale.metrics.Counter;
+
+import io.jhudson.software.scientist4j.exceptions.MismatchException;
+import io.jhudson.software.scientist4j.metrics.DropwizardMetricsProvider;
+import io.jhudson.software.scientist4j.metrics.MicrometerMetricsProvider;
+import io.jhudson.software.scientist4j.metrics.NoopMetricsProvider;
 
 public class ExperimentTest {
 
@@ -66,7 +70,7 @@ public class ExperimentTest {
 
     @Test
     public void itHandlesNullValues() throws Exception {
-        Integer val = new Experiment<Integer>("test", true, new NoopMetricsProvider())
+        @Nullable Integer val = new Experiment<@Nullable Integer>("test", true, new NoopMetricsProvider())
                 .run(() -> null, () -> null);
 
         assertThat(val).isNull();
@@ -86,7 +90,7 @@ public class ExperimentTest {
 
     @Test
     public void itWorksWithAnExtendedClass() throws Exception {
-        Experiment<Integer> exp = new TestPublishExperiment<>("test", new NoopMetricsProvider());
+        Experiment<Integer> exp = new TestPublishExperiment("test", new NoopMetricsProvider());
         exp.run(this::safeFunction, this::safeFunction);
     }
 
@@ -98,6 +102,9 @@ public class ExperimentTest {
         exp.run(() -> 1, this::exceptionThrowingFunction);
 
         Counter result = provider.getRegistry().getCounters().get("scientist.test.candidate.exception");
+        if(result == null) {
+            throw new AssertionError("Expected counter to be non-null");
+        }
         assertThat(result.getCount()).isEqualTo(1);
     }
 
