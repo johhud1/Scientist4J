@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+<section th:fragment="content">
+    <h2>Welcome to the Scientist4J PetClinic</h2>
+    <p>This lightweight PetClinic demonstrates using Scientist4J inside a Spring Boot application.</p>
+    <p>
+        Explore the <a th:href="@{/owners}">owners</a> directory or meet our
+        <a th:href="@{/vets}">veterinarians</a>.
+    </p>
+</section>
+</html>

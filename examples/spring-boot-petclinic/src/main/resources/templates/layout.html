@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+<head>
+    <meta charset="UTF-8">
+    <title>Scientist4J PetClinic</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <h1>Scientist4J PetClinic</h1>
+    <nav>
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/owners}">Owners</a>
+        <a th:href="@{/vets}">Veterinarians</a>
+    </nav>
+</header>
+<main>
+    <section th:replace="${content}"></section>
+</main>
+<footer>
+    <p>Powered by Spring Boot and Scientist4J.</p>
+</footer>
+</body>
+</html>
