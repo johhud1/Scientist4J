@@ -2,7 +2,11 @@
 target/
 *.iml
 .idea/
+.settings/
+**.classpath
+**.project
 
 .mvn
 .vscode
 .envrc
+.aider*
