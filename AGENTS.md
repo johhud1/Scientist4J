@@ -4,6 +4,7 @@
 - 4 spaces indentation
 - Use functional patterns where possible
 - Avoid using Optional and instead mark optional parameters with checkerframework @Nullable
+- Avoid using forEach, instead use for loops
 
 ## Repository Layout
 - `scientist4jCore`: core library implementation.

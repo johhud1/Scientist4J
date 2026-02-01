@@ -2,11 +2,18 @@ package io.github.johhud1.petclinic.repository;
 
 import io.github.johhud1.petclinic.model.Vet;
 
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Repository;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Repository
+@Profile("memory")
+@Primary
 public class InMemoryVetRepository implements VetRepository {
 
     private final List<Vet> vets;
@@ -28,6 +35,18 @@ public class InMemoryVetRepository implements VetRepository {
     }
 
     @Override
+    public void saveAll(List<Vet> vetsToSave) {
+        for (Vet vet : vetsToSave) {
+            save(vet);
+        }
+    }
+
+    @Override
+    public long count() {
+        return vets.size();
+    }
+
+    @Override
     public List<Vet> findAll() {
         return List.copyOf(vets);
     }
@@ -35,9 +54,4 @@ public class InMemoryVetRepository implements VetRepository {
     public void deleteAll() {
         vets.clear();
     }
-
-    public void saveAll(List<Vet> vetsToSave) {
-        vetsToSave.forEach(this::save);
-    }
 }
-

@@ -4,11 +4,18 @@ import io.github.johhud1.petclinic.model.Owner;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Repository;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Repository
+@Profile("memory")
+@Primary
 public class InMemoryOwnerRepository implements OwnerRepository {
 
     private final ConcurrentHashMap<Long, Owner> owners;
@@ -25,6 +32,18 @@ public class InMemoryOwnerRepository implements OwnerRepository {
         }
         owners.put(owner.getId(), owner);
         return owner;
+    }
+
+    @Override
+    public void saveAll(List<Owner> ownersToSave) {
+        for (Owner owner : ownersToSave) {
+            save(owner);
+        }
+    }
+
+    @Override
+    public long count() {
+        return owners.size();
     }
 
     @Override
@@ -49,9 +68,5 @@ public class InMemoryOwnerRepository implements OwnerRepository {
 
     public void deleteAll() {
         owners.clear();
-    }
-
-    public void saveAll(List<Owner> ownersToSave) {
-        ownersToSave.forEach(this::save);
     }
 }

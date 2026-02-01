@@ -12,6 +12,8 @@ import com.codahale.metrics.MetricRegistry;
 
 import io.jhudson.software.scientist4j.metrics.DropwizardMetricsProvider;
 
+//TODO: should we extends AbstractInvocationHandler?
+//TODO: Clean this up; fix metrics; where does the experiment actually get created? not here..
 public class Science4jInvocationHandler<T> implements InvocationHandler {
 
     private final @NonNull T candidate;
@@ -25,7 +27,6 @@ public class Science4jInvocationHandler<T> implements InvocationHandler {
         this.metricsProvider = new DropwizardMetricsProvider(metricRegistry);
     }
 
-    // @SuppressWarnings("nullness")
     @Override
     public @Nullable Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Object[] safeArgs = args == null ? new Object[0] : args;

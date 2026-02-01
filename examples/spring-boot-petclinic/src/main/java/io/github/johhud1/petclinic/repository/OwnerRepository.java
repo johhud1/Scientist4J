@@ -12,4 +12,8 @@ public interface OwnerRepository {
     @Nullable Owner findById(Long id);
 
     @Nullable Owner findByLastName(String lastName);
+
+    void saveAll(List<Owner> owners);
+
+    long count();
 }

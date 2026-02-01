@@ -1,17 +1,16 @@
 package io.jhudson.software.scientist4j;
 
-import io.jhudson.software.scientist4j.exceptions.MismatchException;
-import io.jhudson.software.scientist4j.metrics.NoopMetricsProvider;
-
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+
+import io.jhudson.software.scientist4j.exceptions.MismatchException;
+import io.jhudson.software.scientist4j.metrics.NoopMetricsProvider;
 
 public class ExperimentAsyncCandidateOnlyTest {
 

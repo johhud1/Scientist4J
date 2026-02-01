@@ -1,16 +1,29 @@
 package io.github.johhud1.petclinic.model;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "owners")
 public class Owner {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
     private String address;
     private String city;
     private String telephone;
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Pet> pets;
 
     public Owner() {
@@ -74,4 +87,3 @@ public class Owner {
         pet.setOwner(this);
     }
 }
-

@@ -7,5 +7,8 @@ import java.util.List;
 public interface VetRepository {
 
     List<Vet> findAll();
-}
 
+    void saveAll(List<Vet> vets);
+
+    long count();
+}

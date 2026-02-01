@@ -17,23 +17,14 @@ public class PetClinicService {
 
     private final OwnerRepository ownerRepository;
     private final VetRepository vetRepository;
-    private final Experiment<List<Owner>> ownersExperiment;
 
     public PetClinicService(OwnerRepository ownerRepository, VetRepository vetRepository) {
         this.ownerRepository = ownerRepository;
-        this.vetRepository = vetRepository;
-        ownersExperiment = new ExperimentBuilder<List<Owner>>()
-            .withName("findOwners")
-            .withMetricsProvider(new SimpleMetricsProvider())
-            .build();
+        this.vetRepository = vetRepository;  
     }
 
     public List<Owner> findOwners() {
-        try {
-            return ownersExperiment.run(ownerRepository::findAll, ownerRepository::findAll);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to run experiment", e);
-        }
+        return ownerRepository.findAll();
     }
 
     public @Nullable Owner findOwnerById(Long id) {
